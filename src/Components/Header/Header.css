@@ -1,5 +1,13 @@
 .header {
-  background-color: red;
+  background-color: #454d60;
+  color: #fdf1eb;
   height: 70px;
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tittel {
+  margin: 0;
 }

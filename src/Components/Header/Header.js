@@ -3,7 +3,9 @@ import "./Header.css";
 function Header() {
   return (
     <>
-      <header className="header">Hub</header>
+      <header className="header">
+        <h2 className="tittel">Finkerede</h2>
+      </header>
     </>
   );
 }
