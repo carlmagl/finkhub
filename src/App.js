@@ -1,9 +1,12 @@
-import "./App.css";
-import Header from "./Components/Header/Header";
-import Footer from "./Components/Footer/Footer";
-import ProgramView from "./Components/ProgramView/ProgramView";
 import firebase from "firebase";
-import { useAuthState } from "react-firebase-hooks/auth";
+import "firebase/auth";
+import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
+import "./App.css";
+import Footer from "./Components/Footer/Footer";
+import Header from "./Components/Header/Header";
+import Login from "./Components/Login/Login";
+import ProgramView from "./Components/ProgramView/ProgramView";
+import { AuthRoute } from "./Utils/AuthRoute";
 
 export const initializeFirebase = () => {
   if (!firebase.apps.length) {
@@ -25,26 +28,29 @@ export const initializeFirebase = () => {
 
 initializeFirebase();
 const auth = firebase.auth();
-const firestore = firebase.firestore();
+
 function App() {
-  const [user, loading, error] = useAuthState(auth);
-  console.log(user);
-  const signInWithGoogle = async () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    await auth.signInWithPopup(provider);
-  };
   return (
     <div className="App">
-      <Header />
-      <ProgramView />
-      <button
-        onClick={() => {
-          signInWithGoogle();
-        }}
-      >
-        Logg inn
-      </button>
-      <Footer />
+      <Router>
+        <Switch>
+          <AuthRoute
+            auth={auth}
+            children={
+              <>
+                <Header />
+                <Route exact path="/">
+                  <ProgramView />
+                </Route>
+                <Route exact path="/login">
+                  <Login auth={auth} />
+                </Route>
+                <Footer />
+              </>
+            }
+          ></AuthRoute>
+        </Switch>
+      </Router>
     </div>
   );
 }

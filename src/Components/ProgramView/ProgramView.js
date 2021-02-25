@@ -12,20 +12,20 @@ function ProgramView() {
       img: "/bird.png",
       url: "https://fink.no",
     },
-    {
-      name: "Hyttebooking",
-      img: "/bird.png",
-      url: "https://romantic-shirley-f7bb28.netlify.app/calendar",
-    },
+    // {
+    //   name: "Hyttebooking",
+    //   img: "/bird.png",
+    //   url: "https://romantic-shirley-f7bb28.netlify.app/calendar",
+    // },
     {
       name: "Trelloboard",
       img: "/bird.png",
-      url: "https://trello.com/b/D6r9qiF9/nettside-og-personalh%C3%A5ndbok",
+      url: process.env.REACT_APP_MESSAGING_TRELLO,
     },
     {
       name: "Fellesfinken",
       img: "/bird.png",
-      url: "https://drive.no",
+      url: process.env.REACT_APP_MESSAGING_FELLESFINKEN,
     },
     {
       name: "Trippeltex",
@@ -34,16 +34,13 @@ function ProgramView() {
     },
   ];
   function getCleanURL(url) {
-    if (!url.length) {
+    if (!url) {
       return "";
     }
-    var regex = /([^\/,\s]+\.[^\/,\s]+?)(?=\/|,|\s|$|\?|#)/g;
+    var regex = /([^/,\s]+\.[^/,\s]+?)(?=\/|,|\s|$|\?|#)/g;
     const prettyURl = regex.exec(url)[0];
-    if (prettyURl[0]) return prettyURl;
+    if (prettyURl) return prettyURl;
     return "";
-    // temp = url;
-    // temp = temp.replace(/(^\w+:|^)\/\//, "");
-    // temp = tempreplace(/\/+$/, "");
   }
   return (
     <>
