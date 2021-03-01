@@ -1,38 +1,8 @@
 import "./ProgramView.css";
+import { useCollectionData } from "react-firebase-hooks/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 
-function ProgramView() {
-  const resources = [
-    {
-      name: "Håndbok",
-      img: "/bird.png",
-      url: "https://bok.fink.no",
-    },
-    {
-      name: "Nettside",
-      img: "/bird.png",
-      url: "https://fink.no",
-    },
-    // {
-    //   name: "Hyttebooking",
-    //   img: "/bird.png",
-    //   url: "https://romantic-shirley-f7bb28.netlify.app/calendar",
-    // },
-    {
-      name: "Trelloboard",
-      img: "/bird.png",
-      url: process.env.REACT_APP_MESSAGING_TRELLO,
-    },
-    {
-      name: "Fellesfinken",
-      img: "/bird.png",
-      url: process.env.REACT_APP_MESSAGING_FELLESFINKEN,
-    },
-    {
-      name: "Trippeltex",
-      img: "/bird.png",
-      url: "https://tripletex.no/execute/login?site=no",
-    },
-  ];
+function ProgramView({ firestore, auth }) {
   function getCleanURL(url) {
     if (!url) {
       return "";
@@ -42,26 +12,51 @@ function ProgramView() {
     if (prettyURl) return prettyURl;
     return "";
   }
+
+  const linksRef = firestore.collection("links");
+  const query = linksRef.orderBy("name").limit(25);
+  const [links, loading, error] = useCollectionData(query, {
+    idField: "id",
+  });
+  const [user] = useAuthState(auth);
+  console.log(links);
+  if (loading) {
+    return (
+      <>
+        <div>Loading information</div>
+      </>
+    );
+  }
+
+  if (error) {
+    console.log(error.message);
+  }
+
+  if (user && !links) {
+    return (
+      <>
+        <div>You do not have permission for this.</div>
+      </>
+    );
+  }
+
   return (
     <>
       <h1 className="mainTittel">Ressurser</h1>
       <ul className="list">
-        {resources &&
-          resources.map((resource) => (
-            <li className="listItem" key={resource.name}>
+        {links &&
+          links.map((link) => (
+            <li className="listItem" key={link.id}>
               <a
-                href={resource.url}
+                href={link.url}
                 target="_blank"
                 rel="noreferrer"
-                key={resource.name}
+                key={link.name}
                 className="link"
               >
-                <img
-                  src={resource.img ? resource.img : "/bird.png"}
-                  alt="Hei"
-                ></img>
-                <h1>{resource.name}</h1>
-                <p>{getCleanURL(resource.url)}</p>
+                <img src="/bird.png" alt="Fink bird logo"></img>
+                <h1>{link.name}</h1>
+                <p>{getCleanURL(link.url)}</p>
               </a>
             </li>
           ))}

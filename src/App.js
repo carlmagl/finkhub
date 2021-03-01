@@ -21,13 +21,12 @@ export const initializeFirebase = () => {
       appId: process.env.REACT_APP_APP_ID,
       measurementId: "G-YJXHDBXRC1",
     });
-  } else {
-    firebase.app();
   }
 };
 
 initializeFirebase();
 const auth = firebase.auth();
+const firestore = firebase.firestore();
 
 function App() {
   return (
@@ -38,9 +37,9 @@ function App() {
             auth={auth}
             children={
               <>
-                <Header />
+                <Header auth={auth} />
                 <Route exact path="/">
-                  <ProgramView />
+                  <ProgramView firestore={firestore} auth={auth} />
                 </Route>
                 <Route exact path="/login">
                   <Login auth={auth} />
